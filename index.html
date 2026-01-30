@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relógio Digital | Bruno Silveira</title>
+    <style>
+        :root {
+            --bg: #020617;
+            --neon: #00ff88;
+        }
+
+        body {
+            background-color: var(--bg);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Courier New', monospace;
+        }
+
+        .clock-container {
+            border: 2px solid var(--neon);
+            padding: 40px 60px;
+            border-radius: 10px;
+            background: rgba(0, 255, 136, 0.05);
+            box-shadow: 0 0 30px rgba(0, 255, 136, 0.2);
+            position: relative;
+            /* Removido o elemento ::before que continha "TIME_SYS_V1.0" */
+        }
+
+        #clock {
+            font-size: 5rem;
+            color: var(--neon);
+            font-weight: bold;
+            text-shadow: 0 0 20px var(--neon);
+            letter-spacing: 5px;
+        }
+
+        .date {
+            text-align: center;
+            color: #fff;
+            margin-top: 10px;
+            font-size: 1.2rem;
+            opacity: 0.8;
+        }
+        
+        /* Ajuste responsivo para telas menores */
+        @media (max-width: 600px) {
+            #clock { font-size: 3rem; }
+            .clock-container { padding: 20px 30px; }
+        }
+
+        /* Estilo do Botão Voltar */
+        .btn-voltar {
+            margin-top: 40px;
+            padding: 10px 25px;
+            background: transparent;
+            border: 1px solid var(--neon);
+            color: var(--neon);
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: all 0.3s;
+            display: inline-block;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+
+        .btn-voltar:hover {
+            background: var(--neon);
+            color: var(--bg);
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.4);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="clock-container">
+        <div id="clock">00:00:00</div>
+        <div class="date" id="date">Carregando data...</div>
+    </div>
+
+    <!-- Botão Voltar Adicionado -->
+    <a href="https://brunojsdev.github.io/meu-portfolio/" class="btn-voltar">← Voltar ao Início</a>
+
+    <script>
+        function updateTime() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString("pt-BR");
+            const dateString = now.toLocaleDateString("pt-BR", { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+
+            document.getElementById("clock").innerText = timeString;
+            document.getElementById("date").innerText = dateString;
+        }
+
+        setInterval(updateTime, 1000);
+        updateTime(); // Chama imediatamente para não esperar 1s
+    </script>
+</body>
+</html>
