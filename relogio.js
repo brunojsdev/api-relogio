@@ -1,128 +1,83 @@
 function updateTime() {
     const now = new Date();
-    const timeString = now.toLocaleTimeString("pt-BR");
-    const dateString = now.toLocaleDateString("pt-BR", { 
-        weekday: 'long', 
-        year: 'numeric', 
-        month: 'long', 
-        day: 'numeric' 
-    });
-    document.getElementById("clock").innerText = timeString;
-    document.getElementById("date").innerText = dateString;
+    document.getElementById("clock").innerText = now.toLocaleTimeString("pt-BR");
+    document.getElementById("date").innerText = now.toLocaleDateString("pt-BR", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 }
 setInterval(updateTime, 1000);
 updateTime();
 
-// --- FUNDO: ENGRENAGENS MECÂNICAS (ESTÁTICAS) ---
+// --- FUNDO: ENGRENAGENS COMPLEXAS (BASEADAS NA IMAGEM) ---
 const canvas = document.getElementById('bg-canvas');
 const ctx = canvas.getContext('2d');
+let width, height, gears = [];
 
-let width, height;
-let gears = [];
-
-function resize() {
-    width = canvas.width = window.innerWidth;
-    height = canvas.height = window.innerHeight;
-    initAnimation();
-}
-
-// Função avançada para desenhar engrenagem estilo mecânico
-function drawMechanicalGear(ctx, x, y, outerRadius, innerRadius, teeth, color, opacity) {
+function drawComplexGear(x, y, radius, teeth, opacity) {
     ctx.save();
     ctx.translate(x, y);
     ctx.globalAlpha = opacity;
-    ctx.strokeStyle = color;
-    ctx.fillStyle = color;
+    ctx.strokeStyle = '#00ff88';
     ctx.lineWidth = 2;
 
-    // 1. Dentes da Engrenagem
+    // 1. Dentes externos (Retos e precisos)
     ctx.beginPath();
-    const holeRadius = outerRadius * 0.85;
+    const toothDepth = radius * 0.15;
+    const innerR = radius - toothDepth;
     for (let i = 0; i < teeth * 2; i++) {
-        const angle = (Math.PI * 2 * i) / (teeth * 2);
-        // Alterna entre raio externo e raio da base do dente
-        const r = (i % 2 === 0) ? outerRadius : holeRadius;
+        const angle = (Math.PI * i) / teeth;
+        const r = (i % 2 === 0) ? radius : innerR;
         ctx.lineTo(Math.cos(angle) * r, Math.sin(angle) * r);
     }
     ctx.closePath();
     ctx.stroke();
 
-    // 2. Aro interno
+    // 2. Anéis internos decorativos
     ctx.beginPath();
-    ctx.arc(0, 0, innerRadius, 0, Math.PI * 2);
+    ctx.arc(0, 0, innerR * 0.8, 0, Math.PI * 2);
     ctx.stroke();
-
-    // 3. Furo Central
-    ctx.beginPath();
-    ctx.arc(0, 0, innerRadius * 0.3, 0, Math.PI * 2);
-    ctx.stroke(); // Borda do furo
-    // Opcional: preencher o furo central levemente
-    ctx.globalAlpha = opacity * 0.3;
-    ctx.fill();
-    ctx.globalAlpha = opacity;
-
-    // 4. Raios (Spokes) - 4 barras cruzadas
-    ctx.beginPath();
-    for(let i=0; i<4; i++) {
-        const angle = (Math.PI / 2) * i;
-        ctx.moveTo(Math.cos(angle) * (innerRadius * 0.3), Math.sin(angle) * (innerRadius * 0.3));
-        ctx.lineTo(Math.cos(angle) * innerRadius, Math.sin(angle) * innerRadius);
+    
+    // 3. Furos circulares internos (Estilo mecânico industrial)
+    const holeCount = 5;
+    const holeRadius = innerR * 0.2;
+    const dist = innerR * 0.5;
+    for(let i=0; i<holeCount; i++){
+        const a = (Math.PI * 2 * i) / holeCount;
+        ctx.beginPath();
+        ctx.arc(Math.cos(a) * dist, Math.sin(a) * dist, holeRadius, 0, Math.PI * 2);
+        ctx.stroke();
     }
-    ctx.stroke();
 
+    // 4. Eixo central
+    ctx.beginPath();
+    ctx.arc(0, 0, innerR * 0.15, 0, Math.PI * 2);
+    ctx.stroke();
     ctx.restore();
 }
 
-class StaticGear {
-    constructor(x, y, radius, teeth) {
-        this.x = x;
-        this.y = y;
-        this.radius = radius;
-        this.innerRadius = radius * 0.7;
-        this.teeth = teeth;
-        this.opacity = Math.random() * 0.3 + 0.1;
-        this.pulseSpeed = Math.random() * 0.005 + 0.002;
-        this.pulseDir = 1;
-    }
-
-    update() {
-        this.opacity += this.pulseSpeed * this.pulseDir;
-        if (this.opacity > 0.4 || this.opacity < 0.1) {
-            this.pulseDir *= -1;
-        }
-    }
-
-    draw() {
-        drawMechanicalGear(ctx, this.x, this.y, this.radius, this.innerRadius, this.teeth, '#00ff88', this.opacity);
-    }
-}
-
-function initAnimation() {
-    gears = [];
-    
-    // GRUPO 1: Canto Superior Esquerdo
-    gears.push(new StaticGear(50, 50, 80, 12));
-    gears.push(new StaticGear(160, 30, 40, 8));
-    gears.push(new StaticGear(40, 160, 50, 10));
-
-    // GRUPO 2: Canto Inferior Direito
-    gears.push(new StaticGear(width - 50, height - 50, 100, 16));
-    gears.push(new StaticGear(width - 180, height - 80, 60, 12));
-    gears.push(new StaticGear(width - 60, height - 190, 45, 9));
+function resize() {
+    width = canvas.width = window.innerWidth;
+    height = canvas.height = window.innerHeight;
+    gears = [
+        // Canto Superior Esquerdo
+        {x: 80, y: 80, r: 100, t: 14, op: 0.1, p: 0},
+        {x: 200, y: 60, r: 50, t: 10, op: 0.08, p: 1},
+        {x: 60, y: 220, r: 70, t: 12, op: 0.05, p: 2},
+        // Canto Inferior Direito
+        {x: width-100, y: height-100, r: 120, t: 18, op: 0.12, p: 3},
+        {x: width-240, y: height-80, r: 60, t: 12, op: 0.07, p: 4},
+        {x: width-80, y: height-240, r: 80, t: 14, op: 0.09, p: 5}
+    ];
 }
 
 function animate() {
     ctx.clearRect(0, 0, width, height);
     gears.forEach(g => {
-        g.update();
-        g.draw();
+        g.p += 0.01;
+        let currentOp = g.op + (Math.sin(g.p) * 0.05);
+        drawComplexGear(g.x, g.y, g.r, g.t, Math.max(0.02, currentOp));
     });
     requestAnimationFrame(animate);
 }
 
 window.addEventListener('resize', resize);
-// Inicializa
-width = canvas.width = window.innerWidth;
-height = canvas.height = window.innerHeight;
-initAnimation();
+resize();
 animate();
