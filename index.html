@@ -4,18 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Relógio Digital | Bruno Silveira</title>
-    <link rel="icon" type="image/png" href="./img/fi-port.png">
+    <link rel="icon" type="image/png" href="img/favicon-relogio.png">
     <link rel="stylesheet" href="relogio.css">
+    <style>
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+    </style>
 </head>
 <body>
+    <canvas id="bg-canvas"></canvas>
 
     <div class="clock-container">
+        <!-- (Conteúdo do relógio continua igual...) -->
         <div id="clock">00:00:00</div>
         <div class="date" id="date">Carregando data...</div>
     </div>
 
-    <!-- Botão Voltar -->
-    <a href="https://brunojsdev.github.io/meu-portfolio/" class="btn-voltar">← Voltar ao Início</a>
+    <a href="index.html" class="btn-voltar">← Voltar ao Início</a>
 
     <script src="relogio.js"></script>
 </body>
