@@ -17,3 +17,5 @@ Um relógio digital preciso com estética neon, exibindo hora e data em tempo re
 * relogio.html
 * relogio.css
 * relogio.js
+* img/: Diretório dedicado exclusivamente ao **favicon** do projeto.
+* README.md: Documentação detalhada sobre o projeto.
